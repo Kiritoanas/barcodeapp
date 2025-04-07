@@ -1,0 +1,31 @@
+pluginManagement {
+    def localProperties = new File(rootProject.projectDir, 'local.properties')
+    def flutterSdkPath = null
+    if (localProperties.exists()) {
+        Properties properties = new Properties()
+        localProperties.withInputStream { stream ->
+            properties.load(stream)
+        }
+        flutterSdkPath = properties.getProperty('flutter.sdk')
+    }
+
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        if (flutterSdkPath) {
+            def flutterToolsGradle = new File("${flutterSdkPath}/packages/flutter_tools/gradle")
+            if (flutterToolsGradle.exists()) {
+                includeBuild flutterToolsGradle
+            } else {
+                println "Warning: Flutter tools gradle directory does not exist at ${flutterToolsGradle}"
+            }
+        }
+    }
+}
+
+plugins {
+    id 'dev.flutter.flutter-plugin-loader' version '1.0.0'
+}
+
+include ':app'
